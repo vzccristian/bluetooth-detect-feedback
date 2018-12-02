@@ -108,14 +108,19 @@ def qtThread(callback):
                 mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
         if len(nearby_devices) == 0:
             encontrado = False
+            mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
 
     sys.exit(0)
 
 
 if __name__ == '__main__':
-
-    app = QApplication(sys.argv)
-    mainWindow = Display()
-    mainWindow.show()
-    app.exec()
-    mainWindow.kill()
+    try:
+        app = QApplication(sys.argv)
+        mainWindow = Display()
+        mainWindow.showMaximized()
+        # mainWindow.showFullScreen()
+        app.exec_()
+        mainWindow.kill()
+    except (KeyboardInterrupt, SystemExit):
+        mainWindow.kill()
+        sys.exit(0)
