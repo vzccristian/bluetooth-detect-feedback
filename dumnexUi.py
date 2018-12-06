@@ -66,7 +66,6 @@ def qtThread(callback):
     name = list(feedback.keys())[0]
     mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
     print("Buscando dispositivo: {}".format(userMac.upper()))
-
     while getattr(t, "do_run", True):
         # Main Code
 
@@ -105,8 +104,8 @@ def qtThread(callback):
                         pass
             elif (len(nearby_devices) == check):
                 encontrado = False
-		check = 0
-                mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
+		check =0
+		mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
         if len(nearby_devices) == 0:
             encontrado = False
             mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
