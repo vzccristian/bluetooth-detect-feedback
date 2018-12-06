@@ -68,45 +68,39 @@ def qtThread(callback):
     print("Buscando dispositivo: {}".format(userMac.upper()))
     while getattr(t, "do_run", True):
         # Main Code
-
-        check = 0
         print("Buscando dispositivos bluetooth...")
         nearby_devices = discover_devices(lookup_names=True)
         print("Encontrados {} dispositivos: ".format(len(nearby_devices)))
+        nearby_devices_mac = [dev[0] for dev in nearby_devices]
         print(nearby_devices)
+        if userMac.upper() in nearby_devices_mac:
+            if encontrado == False:
+                encontrado = True
+                print(" ------------> El usuario ha llegado.")
+                try:
+                    req = requests.get(URL_BASE3 + userId)
+                    if req.status_code == 200:
+                        try:
+                            valoracion = int(req.text)
+                            texto = feedback[name][valoracion][random.randint(0, len(feedback[name][valoracion])) - 1]
+                            print("Valoración de hoy: {}. \n{}".format(valoracion, texto))
+                            mytext = "......Hola {}. {}".format(name, texto)
 
-        for dev in nearby_devices:
-            check += 1
-            if userMac.upper() == dev[0].upper():
-                print("El usuario ha llegado.")
-                if not encontrado:
-                    encontrado = True
-                    try:
-                        req = requests.get(URL_BASE3 + userId)
-                        if req.status_code == 200:
-                            try:
-                                valoracion = int(req.text)
-                                texto = feedback[name][valoracion][random.randint(0, len(feedback[name][valoracion])) - 1]
-                                print("Valoración de hoy: {}. \n{}".format(valoracion, texto))
-                                mytext = "Hola {}. {}".format(name, texto)
+                            mysrc.myGUI_signal.emit(valoracion, mytext)  # Emit
 
-                                mysrc.myGUI_signal.emit(valoracion, mytext)  # Emit
+                            myobj = gTTS(text=mytext, lang="es", slow=False)
+                            myobj.save("tempfile.mp3")
 
-                                myobj = gTTS(text=mytext, lang="es", slow=False)
-                                myobj.save("tempfile.mp3")
-
-                                os.popen('mpg321 tempfile.mp3').read()
-                                time.sleep(1)
-                                os.system("rm -f tempfile.mp3")
-                            except Exception:
-                                pass
-                    except Exception:
-                        pass
-            elif (len(nearby_devices) == check):
-                encontrado = False
-		check =0
-		mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
-        if len(nearby_devices) == 0:
+                            # os.popen('mpg321 tempfile.mp3').read()
+                            os.system("mpg321 tempfile.mp3")
+                            time.sleep(1)
+                            # os.system("rm -f tempfile.mp3")
+                            check = 0
+                        except Exception:
+                            pass
+                except Exception:
+                    pass
+        else:
             encontrado = False
             mysrc.myGUI_signal.emit(-1, "Esperando por "+name)  # Emit
 
