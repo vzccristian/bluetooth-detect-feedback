@@ -4,13 +4,14 @@ import time
 import os
 import yaml
 import random
-from bluetooth import *
 import requests
 import sys
 from PyQt5 import uic, QtGui, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication
 import threading
+from bluetooth import *
+from pygame import mixer # Load the required library
 
 userMac = "bc:6e:64:1f:0a:8d"
 userId = "U1"
@@ -54,6 +55,7 @@ class Display(QMainWindow):
 
 
 def qtThread(callback):
+    mixer.init()
     mysrc = Communicate()
     mysrc.myGUI_signal.connect(callback)
     t = threading.currentThread()
@@ -70,7 +72,6 @@ def qtThread(callback):
         # Main Code
         print("Buscando dispositivos bluetooth...")
         nearby_devices = discover_devices(lookup_names=True)
-        print("Encontrados {} dispositivos: ".format(len(nearby_devices)))
         nearby_devices_mac = [dev[0] for dev in nearby_devices]
         print(nearby_devices)
         if userMac.upper() in nearby_devices_mac:
@@ -84,18 +85,15 @@ def qtThread(callback):
                             valoracion = int(req.text)
                             texto = feedback[name][valoracion][random.randint(0, len(feedback[name][valoracion])) - 1]
                             print("Valoración de hoy: {}. \n{}".format(valoracion, texto))
-                            mytext = "......Hola {}. {}".format(name, texto)
-
-                            mysrc.myGUI_signal.emit(valoracion, mytext)  # Emit
+                            mytext = "Hola {}. {}".format(name, texto)
+                            mysrc.myGUI_signal.emit(valoracion, mytext)  # Emito
 
                             myobj = gTTS(text=mytext, lang="es", slow=False)
                             myobj.save("tempfile.mp3")
+                            mixer.music.load('tempfile.mp3')
+                            mixer.music.play()
 
-                            # os.popen('mpg321 tempfile.mp3').read()
-                            os.system("mpg321 tempfile.mp3")
                             time.sleep(1)
-                            # os.system("rm -f tempfile.mp3")
-                            check = 0
                         except Exception:
                             pass
                 except Exception:
