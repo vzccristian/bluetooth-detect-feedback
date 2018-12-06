@@ -13,10 +13,11 @@ import threading
 from bluetooth import *
 from pygame import mixer # Load the required library
 
-userMac = "bc:6e:64:1f:0a:8d"
-userId = "U1"
-URL_BASE3 = 'https://dumnex-tratamiento.herokuapp.com/v1/valoracion?usuarioId='
 
+userMac = "bc:6e:64:1f:0a:8d"
+userId = "12345678B"
+URL_BASE3 = 'https://dumnex-tratamiento.herokuapp.com/v1/valoracion?usuarioId='
+URL_BASE = 'http://192.168.0.155:8080/v1/valoracion?usuarioId='
 
 class Communicate(QtCore.QObject):
     myGUI_signal = QtCore.pyqtSignal(int, str)
@@ -79,7 +80,7 @@ def qtThread(callback):
                 encontrado = True
                 print(" ------------> El usuario ha llegado.")
                 try:
-                    req = requests.get(URL_BASE3 + userId)
+                    req = requests.get(URL_BASE + userId)
                     if req.status_code == 200:
                         try:
                             valoracion = int(req.text)
@@ -109,8 +110,10 @@ if __name__ == '__main__':
     try:
         app = QApplication(sys.argv)
         mainWindow = Display()
-        mainWindow.showMaximized()
-        # mainWindow.showFullScreen()
+        if len(sys.argv) > 1:
+            mainWindow.showFullScreen()
+        else:
+            mainWindow.showMaximized()
         app.exec_()
         mainWindow.kill()
     except (KeyboardInterrupt, SystemExit):
