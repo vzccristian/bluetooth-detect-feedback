@@ -75,4 +75,4 @@ Indicandole cualquier argumento se desplegará en tamaño completo de pantalla. 
 
 ### Esquema de conexiones
 
-![Esquema de conexiones](https://github.com/vzccristian/bluetooth-detect-feedback/esquema.png)
+![Esquema de conexiones](https://raw.githubusercontent.com/vzccristian/bluetooth-detect-feedback/master/esquema.png)
