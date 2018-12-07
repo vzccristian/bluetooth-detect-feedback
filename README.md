@@ -75,4 +75,4 @@ Indicandole cualquier argumento se desplegará en tamaño completo de pantalla. 
 
 ### Esquema de conexiones
 
-![Esquema de conexiones](https://github.com/DSHubicom/proyecto-dsh-descripcion-de-sistemas-ubicuos-18-19-smarthelper/blob/master/DetectorBluetooth/esquema.png)
+![Esquema de conexiones](https://github.com/vzccristian/bluetooth-detect-feedback/esquema.png)
